@@ -84,8 +84,8 @@ int main(int argc, char **argv) {
           break;
         } else {
           vertice_number = num+1;
-	  rule1(vertice_number,ceil(vertice_number/2.0));
-	  rule2(vertice_number,ceil(vertice_number/2.0));
+	  rule1(vertice_number,floor(vertice_number/2.0));
+	  rule2(vertice_number,floor(vertice_number/2.0));
           flag_v = true;
         }
         // if eof bail out

@@ -1,0 +1,32 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/shuai/VC/Proposition.h
+bits/stdc++.h
+-
+
+/home/shuai/VC/ece650-a2.cpp
+fstream
+-
+iostream
+-
+iterator
+-
+list
+-
+sstream
+-
+tuple
+-
+vector
+-
+math.h
+-
+Proposition.h
+/home/shuai/VC/Proposition.h
+
