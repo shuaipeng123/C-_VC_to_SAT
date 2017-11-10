@@ -6,6 +6,13 @@
 #include <tuple>
 #include <vector>
 #include <math.h>
+// defined std::unique_ptr
+#include <memory>
+// defines Var and Lit
+#include "minisat/core/SolverTypes.h"
+// defines Solver
+#include "minisat/core/Solver.h"
+
 using namespace std;
 #include "Proposition.h"
 template <typename Out>
@@ -24,7 +31,6 @@ std::vector<std::string> split(const std::string &s, char delim) {
   return elems;
 }
 void permutation(std::vector<int> bar);
-void shortest_path(int, int, int, int);
 
 bool build_points_from_E(int);
 void rule1(int vertice_number,int vc_size);
@@ -33,6 +39,9 @@ void rule4(int point);
 std::vector<int> points1;
 std::vector<std::string> nums;
 std::vector<Proposition> line;
+ std::unique_ptr<Minisat::Solver> solver(new Minisat::Solver());
+ Minisat::vec<Minisat::Lit> vars;
+void clause_creation(std::vector<int> bar);
 // std::ifstream infile("test.txt");
 int main(int argc, char **argv) {
   // Test code. Replaced with your code
@@ -91,41 +100,6 @@ int main(int argc, char **argv) {
         // if eof bail out
 
       } // end V
-      else if (ch == 's' && flag_s) {
-        // read a character
-        // Note that whitespace is ignored
-        std::vector<int> sp_dp;
-        while (!input.eof()) {
-          if (input.eof()) {
-            std::cerr << "Error:in shortest path Unexpected argument\n";
-            break;
-          }
-
-          // parse an integer
-          input >> num;
-          if (input.fail()) {
-            std::cerr << "Error:in shortest path no starting point\n";
-            break;
-          } else {
-            sp_dp.push_back(num);
-            flag_s = false;
-          }
-        }
-
-        sp = sp_dp.at(0);
-        dp = sp_dp.at(1);
-        if (sp >= vertice_number || dp >= vertice_number) {
-          flag_s = true;
-	   flag_e = true;
-          flag_v = true;
-          std::cerr << "Error: in shortest path wrong input format for s\n";
-        } else {
-          shortest_path(vertice_number, length, sp, dp);
-          flag_s = true;
-          flag_e = true;
-          flag_v = true;
-        }
-      } // end s if
       else if (ch == 'E' && flag_e) {
 	//std::cout<<line<<std::endl;
         nums = split(line, ',');
@@ -156,6 +130,16 @@ int main(int argc, char **argv) {
 				std::cout<<std::endl;
 			count++;	
 		}
+		 bool res = solver->solve();
+   		std::cout << "The result is: " << res << "\n";
+
+    		std::cout << "satisfying assignment is: "
+              << "l1=" << Minisat::toInt(solver->modelValue(vars[0])) << " "
+              << "l2=" << Minisat::toInt(solver->modelValue(vars[1]))<< " "
+              << "l3=" << Minisat::toInt(solver->modelValue(vars[2])) << " "
+              << "l4=" << Minisat::toInt(solver->modelValue(vars[3])) << " "
+              << "l5=" << Minisat::toInt(solver->modelValue(vars[4])) << " "
+              << "l6=" << Minisat::toInt(solver->modelValue(vars[5])) << std::endl;
 	            flag_e = true;
 		}
         }
@@ -187,6 +171,8 @@ void rule1(int vertice_number,int vc_size){
 			obj1.index_k=j;			
 			line.push_back(obj1);
 			index++;
+			Minisat::Lit l=Minisat::mkLit(solver->newVar());
+			vars.push(l);
 		}
 		
 	}
@@ -203,16 +189,19 @@ void rule1(int vertice_number,int vc_size){
 	std::vector<int> bar_rule3;
 	for(int i=1;i<=vc_size;i++)
 	{
+	
  	for (std::vector<Proposition>::iterator it = line.begin() ;
         	it != line.end(); ++it) {
 		if(i==(*it).index_k)
     		{
+			
 			std::cout<<(*it).position;
+			
 			bar_rule3.push_back((*it).position);
 			
 		}      
     		}
-	std::cout<<std::endl;
+	clause_creation(bar_rule3);
 	permutation(bar_rule3);
 	bar_rule3.clear();
 	
@@ -245,6 +234,7 @@ void rule2(int vertice_number,int vc_size){
 		{	
 			bar_rule2.push_back((*it).position);
 			//std::cout<<bar_rule2.size()<<" size "<<std::endl;
+			
 			permutation(bar_rule2);
 			bar_rule2.clear();
 		}
@@ -290,11 +280,14 @@ void permutation(std::vector<int> bar){
    std::fill(v.begin(), v.begin() + r, true);
 
    do {
+	std::vector<int> permu_vector;
        for (int i = 0; i < n; ++i) {
            if (v[i]) {
+		permu_vector.push_back(bar.at(i));
                std::cout << bar.at(i) << " ";
            }
        }
+	clause_creation(permu_vector);
        std::cout << "\n";
    } while (std::prev_permutation(v.begin(), v.end()));
 
@@ -302,99 +295,20 @@ void permutation(std::vector<int> bar){
 
 
 
-void shortest_path(int points, int length, int sp, int dp) {
-  int infinity = 9999999;
-  int dis[points];
-  int flag[points];
-  int edg[points][points];
-  if (sp == dp) {
-    std::cout << sp << std::endl;
-    return;
-  }
-  if (length == 1) {
-    std::cout << 0 << std::endl;
-  }
-  for (int i = 0; i < points; i++) {
-    for (int j = 0; j < points; j++) {
-      if (i == j) {
-        edg[i][j] = 0;
-      } else {
-        edg[i][j] = infinity;
-      }
-    }
-  }
-
-  for (int i = 0; i < length; i = i + 2) {
-
-    edg[points1.at(i)][points1.at(i + 1)] = 1;
-    edg[points1.at(i + 1)][points1.at(i)] = 1;
-  }
-
-  // setting distance to starting point
-  for (int i = 0; i < points; i++) {
-    dis[i] = edg[sp][i];
-  }
-
-  // setting flag for starting point
-  for (int i = 0; i < points; i++) {
-    flag[i] = 0;
-  }
-  flag[sp] = 1;
-  int min, u;
-  std::vector<tuple<int, int>> first;
-  for (int i = 0; i < points - 1; i++) {
-    min = infinity;
-    for (int j = 0; j < points; j++) {
-      if (flag[j] == 0 && dis[j] < min) {
-        min = dis[j];
-        u = j;
-      }
-    }
-    std::tuple<int, int> foo(u, sp);
-    // int u_sp=u*10+sp;
-    first.emplace_back(foo);
-    flag[u] = 1;
-    for (int v = 0; v < points; v++) {
-      if (edg[u][v] < infinity) {
-
-        if (dis[v] > dis[u] + edg[u][v]) {
-          dis[v] = dis[u] + edg[u][v];
-          std::tuple<int, int> foo(u, v);
-          first.emplace_back(foo);
-        }
-      }
-    }
-  }
-  // int tmp=-1;
-  int tmp_dp = dp;
-  if (dis[dp] != infinity) {
-    std::vector<int> result;
-    for (std::vector<tuple<int, int>>::iterator it = first.end() - 1;
-         it != first.begin(); --it) {
-
-      if (std::get<1>(*it) == tmp_dp) {
-        // std::cout  <<std::get<0>(*it)<<"->"<<std::get<1>(*it)<<std::endl;
-        result.emplace_back(tmp_dp);
-        // tmp=(*it/10);
-        tmp_dp = std::get<0>(*it);
-        // std::cout  << tmp_dp<<"this is tmp_dp"<<std::endl;
-      }
-      // std::cout << ' ' <<std::get<0>(*it)<<std::get<1>(*it)<<endl;
-    }
-    // std::cout  << sp<<"->"<<tmp_dp<<std::endl;
-    result.emplace_back(tmp_dp);
-    result.emplace_back(sp);
-    for (std::vector<int>::reverse_iterator it = result.rbegin();
-         it != result.rend(); ++it) {
-      if (it != result.rend() - 1)
-        std::cout << *it << "-";
-      else
-        std::cout << *it<<std::endl;
-    }
-  } else {
-    std::cout << "Error: there is no path";
-  }
- 
+void clause_creation(std::vector<int> bar){
+	for(auto x:bar)
+	{
+		std::cout<<x<<" clause ";
+	}
+	std::cout<<std::endl;
+	Minisat::vec<Minisat::Lit> clause;
+	for (int i = 0; i < bar.size(); ++i) {
+           
+        	  clause.push(vars[bar.at(i)-1]);
+           
+       }
+	
+	solver->addClause(clause);
 }
 
 bool build_points_from_E(int points) {
