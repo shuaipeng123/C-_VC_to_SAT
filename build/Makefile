@@ -57,6 +57,47 @@ edit_cache:
 edit_cache/fast: edit_cache
 .PHONY : edit_cache/fast
 
+# Special rule for the target install
+install: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
+	/usr/bin/cmake -P cmake_install.cmake
+.PHONY : install
+
+# Special rule for the target install
+install/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
+	/usr/bin/cmake -P cmake_install.cmake
+.PHONY : install/fast
+
+# Special rule for the target install/local
+install/local: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local
+
+# Special rule for the target install/local
+install/local/fast: install/local
+.PHONY : install/local/fast
+
+# Special rule for the target install/strip
+install/strip: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
+	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip
+
+# Special rule for the target install/strip
+install/strip/fast: install/strip
+.PHONY : install/strip/fast
+
+# Special rule for the target list_install_components
+list_install_components:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\""
+.PHONY : list_install_components
+
+# Special rule for the target list_install_components
+list_install_components/fast: list_install_components
+.PHONY : list_install_components/fast
+
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
@@ -111,6 +152,58 @@ ece650-a2/fast:
 	$(MAKE) -f CMakeFiles/ece650-a2.dir/build.make CMakeFiles/ece650-a2.dir/build
 .PHONY : ece650-a2/fast
 
+#=============================================================================
+# Target rules for targets named minisat-lib-shared
+
+# Build rule for target.
+minisat-lib-shared: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 minisat-lib-shared
+.PHONY : minisat-lib-shared
+
+# fast build rule for target.
+minisat-lib-shared/fast:
+	$(MAKE) -f minisat/CMakeFiles/minisat-lib-shared.dir/build.make minisat/CMakeFiles/minisat-lib-shared.dir/build
+.PHONY : minisat-lib-shared/fast
+
+#=============================================================================
+# Target rules for targets named minisat-lib-static
+
+# Build rule for target.
+minisat-lib-static: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 minisat-lib-static
+.PHONY : minisat-lib-static
+
+# fast build rule for target.
+minisat-lib-static/fast:
+	$(MAKE) -f minisat/CMakeFiles/minisat-lib-static.dir/build.make minisat/CMakeFiles/minisat-lib-static.dir/build
+.PHONY : minisat-lib-static/fast
+
+#=============================================================================
+# Target rules for targets named minisat_core
+
+# Build rule for target.
+minisat_core: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 minisat_core
+.PHONY : minisat_core
+
+# fast build rule for target.
+minisat_core/fast:
+	$(MAKE) -f minisat/CMakeFiles/minisat_core.dir/build.make minisat/CMakeFiles/minisat_core.dir/build
+.PHONY : minisat_core/fast
+
+#=============================================================================
+# Target rules for targets named minisat_simp
+
+# Build rule for target.
+minisat_simp: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 minisat_simp
+.PHONY : minisat_simp
+
+# fast build rule for target.
+minisat_simp/fast:
+	$(MAKE) -f minisat/CMakeFiles/minisat_simp.dir/build.make minisat/CMakeFiles/minisat_simp.dir/build
+.PHONY : minisat_simp/fast
+
 ece650-a2.o: ece650-a2.cpp.o
 .PHONY : ece650-a2.o
 
@@ -143,7 +236,15 @@ help:
 	@echo "... depend"
 	@echo "... ece650-a2"
 	@echo "... edit_cache"
+	@echo "... install"
+	@echo "... install/local"
+	@echo "... install/strip"
+	@echo "... list_install_components"
 	@echo "... rebuild_cache"
+	@echo "... minisat-lib-shared"
+	@echo "... minisat-lib-static"
+	@echo "... minisat_core"
+	@echo "... minisat_simp"
 	@echo "... ece650-a2.o"
 	@echo "... ece650-a2.i"
 	@echo "... ece650-a2.s"

@@ -81,6 +81,8 @@ ece650__a2_EXTERNAL_OBJECTS =
 
 ece650-a2: CMakeFiles/ece650-a2.dir/ece650-a2.cpp.o
 ece650-a2: CMakeFiles/ece650-a2.dir/build.make
+ece650-a2: minisat/libminisat.a
+ece650-a2: /usr/lib/x86_64-linux-gnu/libz.so
 ece650-a2: CMakeFiles/ece650-a2.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --red --bold "Linking CXX executable ece650-a2"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/ece650-a2.dir/link.txt --verbose=$(VERBOSE)

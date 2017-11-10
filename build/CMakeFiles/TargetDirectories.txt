@@ -1,1 +1,5 @@
 /home/shuai/VC/build/CMakeFiles/ece650-a2.dir
+/home/shuai/VC/build/minisat/CMakeFiles/minisat-lib-shared.dir
+/home/shuai/VC/build/minisat/CMakeFiles/minisat-lib-static.dir
+/home/shuai/VC/build/minisat/CMakeFiles/minisat_core.dir
+/home/shuai/VC/build/minisat/CMakeFiles/minisat_simp.dir
