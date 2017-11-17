@@ -45,7 +45,9 @@ SET(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 SET(CMAKE_DEPEND_INFO_FILES
+  "CMakeFiles/binaryS.dir/DependInfo.cmake"
   "CMakeFiles/ece650-a2.dir/DependInfo.cmake"
+  "CMakeFiles/test_sat.dir/DependInfo.cmake"
   "minisat/CMakeFiles/minisat-lib-shared.dir/DependInfo.cmake"
   "minisat/CMakeFiles/minisat-lib-static.dir/DependInfo.cmake"
   "minisat/CMakeFiles/minisat_core.dir/DependInfo.cmake"

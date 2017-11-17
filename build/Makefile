@@ -140,6 +140,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named binaryS
+
+# Build rule for target.
+binaryS: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 binaryS
+.PHONY : binaryS
+
+# fast build rule for target.
+binaryS/fast:
+	$(MAKE) -f CMakeFiles/binaryS.dir/build.make CMakeFiles/binaryS.dir/build
+.PHONY : binaryS/fast
+
+#=============================================================================
 # Target rules for targets named ece650-a2
 
 # Build rule for target.
@@ -151,6 +164,19 @@ ece650-a2: cmake_check_build_system
 ece650-a2/fast:
 	$(MAKE) -f CMakeFiles/ece650-a2.dir/build.make CMakeFiles/ece650-a2.dir/build
 .PHONY : ece650-a2/fast
+
+#=============================================================================
+# Target rules for targets named test_sat
+
+# Build rule for target.
+test_sat: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 test_sat
+.PHONY : test_sat
+
+# fast build rule for target.
+test_sat/fast:
+	$(MAKE) -f CMakeFiles/test_sat.dir/build.make CMakeFiles/test_sat.dir/build
+.PHONY : test_sat/fast
 
 #=============================================================================
 # Target rules for targets named minisat-lib-shared
@@ -204,6 +230,30 @@ minisat_simp/fast:
 	$(MAKE) -f minisat/CMakeFiles/minisat_simp.dir/build.make minisat/CMakeFiles/minisat_simp.dir/build
 .PHONY : minisat_simp/fast
 
+binaryS.o: binaryS.cpp.o
+.PHONY : binaryS.o
+
+# target to build an object file
+binaryS.cpp.o:
+	$(MAKE) -f CMakeFiles/binaryS.dir/build.make CMakeFiles/binaryS.dir/binaryS.cpp.o
+.PHONY : binaryS.cpp.o
+
+binaryS.i: binaryS.cpp.i
+.PHONY : binaryS.i
+
+# target to preprocess a source file
+binaryS.cpp.i:
+	$(MAKE) -f CMakeFiles/binaryS.dir/build.make CMakeFiles/binaryS.dir/binaryS.cpp.i
+.PHONY : binaryS.cpp.i
+
+binaryS.s: binaryS.cpp.s
+.PHONY : binaryS.s
+
+# target to generate assembly for a file
+binaryS.cpp.s:
+	$(MAKE) -f CMakeFiles/binaryS.dir/build.make CMakeFiles/binaryS.dir/binaryS.cpp.s
+.PHONY : binaryS.cpp.s
+
 ece650-a2.o: ece650-a2.cpp.o
 .PHONY : ece650-a2.o
 
@@ -228,12 +278,37 @@ ece650-a2.cpp.s:
 	$(MAKE) -f CMakeFiles/ece650-a2.dir/build.make CMakeFiles/ece650-a2.dir/ece650-a2.cpp.s
 .PHONY : ece650-a2.cpp.s
 
+test_sat.o: test_sat.cpp.o
+.PHONY : test_sat.o
+
+# target to build an object file
+test_sat.cpp.o:
+	$(MAKE) -f CMakeFiles/test_sat.dir/build.make CMakeFiles/test_sat.dir/test_sat.cpp.o
+.PHONY : test_sat.cpp.o
+
+test_sat.i: test_sat.cpp.i
+.PHONY : test_sat.i
+
+# target to preprocess a source file
+test_sat.cpp.i:
+	$(MAKE) -f CMakeFiles/test_sat.dir/build.make CMakeFiles/test_sat.dir/test_sat.cpp.i
+.PHONY : test_sat.cpp.i
+
+test_sat.s: test_sat.cpp.s
+.PHONY : test_sat.s
+
+# target to generate assembly for a file
+test_sat.cpp.s:
+	$(MAKE) -f CMakeFiles/test_sat.dir/build.make CMakeFiles/test_sat.dir/test_sat.cpp.s
+.PHONY : test_sat.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
+	@echo "... binaryS"
 	@echo "... ece650-a2"
 	@echo "... edit_cache"
 	@echo "... install"
@@ -241,13 +316,20 @@ help:
 	@echo "... install/strip"
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
+	@echo "... test_sat"
 	@echo "... minisat-lib-shared"
 	@echo "... minisat-lib-static"
 	@echo "... minisat_core"
 	@echo "... minisat_simp"
+	@echo "... binaryS.o"
+	@echo "... binaryS.i"
+	@echo "... binaryS.s"
 	@echo "... ece650-a2.o"
 	@echo "... ece650-a2.i"
 	@echo "... ece650-a2.s"
+	@echo "... test_sat.o"
+	@echo "... test_sat.i"
+	@echo "... test_sat.s"
 .PHONY : help
 
 

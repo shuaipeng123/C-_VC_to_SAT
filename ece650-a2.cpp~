@@ -35,13 +35,17 @@ void permutation(std::vector<int> bar);
 bool build_points_from_E(int);
 void rule1(int vertice_number,int vc_size);
 void rule2(int vertice_number,int vc_size);
-void rule4(int point);
+std::vector<int> rule4(int point);
+void clause_creation(std::vector<int> bar);
+void clause_creation_reverse(std::vector<int> bar);
+bool reduction_solver(int k_value);
+
 std::vector<int> points1;
 std::vector<std::string> nums;
-std::vector<Proposition> line;
+std::vector<Proposition> props;
  std::unique_ptr<Minisat::Solver> solver(new Minisat::Solver());
  Minisat::vec<Minisat::Lit> vars;
-void clause_creation(std::vector<int> bar);
+  int vertice_number;
 // std::ifstream infile("test.txt");
 int main(int argc, char **argv) {
   // Test code. Replaced with your code
@@ -50,14 +54,13 @@ int main(int argc, char **argv) {
 
   // separator character
   // read from stdin until EOF
-  int dp;
-  int sp;
-  int vertice_number;
+
+
   unsigned num;
 
   int length = 0;
   bool flag_v = true;
-  bool flag_s = true;
+
   bool flag_e = true;
   while (!std::cin.eof()) {
     // std::cout << "Enter numbers separated by comma: ";
@@ -92,9 +95,8 @@ int main(int argc, char **argv) {
           std::cerr << "Error:in shortest path  need to parse a number\n";
           break;
         } else {
-          vertice_number = num+1;
-	  rule1(vertice_number,ceil(vertice_number/2.0));
-	  rule2(vertice_number,ceil(vertice_number/2.0));
+          vertice_number = num;
+
           flag_v = true;
         }
         // if eof bail out
@@ -121,25 +123,64 @@ int main(int argc, char **argv) {
             std::cerr << "Error: in shortest path  wrong input for E\n";
           } else
 		{
+		/**
+	  	rule1(vertice_number,floor(vertice_number/2.0));
+	  	rule2(vertice_number,floor(vertice_number/2.0));
 		int count=1;
 		for (std::vector<int>::iterator it = points1.begin() ;
         	it != points1.end(); ++it) {
-		
-			rule4((*it+1));
-			if(count%2==0)
-				std::cout<<std::endl;
+			std::vector<int> bar;
+			std::vector<int> bar2;
+			bar=rule4((*it+1));
+			for (std::vector<int>::iterator its = bar.begin() ;
+        	its != bar.end(); ++its) {
+					//std::cout<<*its<<"it in it"<<std::endl;
+			}
+			std::advance(it,1);
+			bar2=rule4((*it+1));
+			std::vector<int> two_bar=bar;
+			two_bar.insert(two_bar.end(),bar2.begin(),bar2.end());
+			for (std::vector<int>::iterator itt = two_bar.begin() ;
+        	itt != two_bar.end(); ++itt) {
+					std::cout<<*itt<<"it in is"<<std::endl;
+			}
+			clause_creation(two_bar);
+			//if(count%2==0)
+			//	std::cout<<std::endl;
 			count++;	
 		}
 		 bool res = solver->solve();
+		**/
+		int tmp_high=vertice_number;
+		int low=1;
+		int mid=0;
+		while(low<tmp_high){
+			mid = (low + tmp_high )/2;
+			if(reduction_solver(mid))
+			{
+				tmp_high=mid-1;
+			}		
+			else{
+				low=mid+1;
+			}
+			solver.reset (new Minisat::Solver());
+			 props.clear();
+			  vars.clear();
+			std::cout<<mid<<"this is mid"<<std::endl;
+		}
+		bool res=reduction_solver(low);
    		std::cout << "The result is: " << res << "\n";
-
-    		std::cout << "satisfying assignment is: "
-              << "l1=" << Minisat::toInt(solver->modelValue(vars[0])) << " "
-              << "l2=" << Minisat::toInt(solver->modelValue(vars[1]))<< " "
-              << "l3=" << Minisat::toInt(solver->modelValue(vars[2])) << " "
-              << "l4=" << Minisat::toInt(solver->modelValue(vars[3])) << " "
-              << "l5=" << Minisat::toInt(solver->modelValue(vars[4])) << " "
-              << "l6=" << Minisat::toInt(solver->modelValue(vars[5])) << std::endl;
+		std::cout << "satisfying assignment is: ";
+		if(res){
+		for(int s=0;s<vars.size();s++)
+		{
+    		
+              //std::cout <<"l"<<s<<"=" << Minisat::toInt(solver->modelValue(vars[s])) << " ";
+			if(Minisat::toInt(solver->modelValue(vars[s]))==0)
+				std::cout<<(props.at(s).index_i-1)<<" ";
+          	 }
+		}
+			std::cout<<std::endl;
 	            flag_e = true;
 		}
         }
@@ -150,11 +191,38 @@ int main(int argc, char **argv) {
   }
 }
 
+bool reduction_solver(int k_value){
+	
+		rule1(vertice_number,k_value);
+	  	rule2(vertice_number,k_value);
+		int count=1;
+		for (std::vector<int>::iterator it = points1.begin() ;
+        	it != points1.end(); ++it) {
+			std::vector<int> bar;
+			std::vector<int> bar2;
+			bar=rule4((*it+1));
+			for (std::vector<int>::iterator its = bar.begin() ;
+        	its != bar.end(); ++its) {
+					//std::cout<<*its<<"it in it"<<std::endl;
+			}
+			std::advance(it,1);
+			bar2=rule4((*it+1));
+			std::vector<int> two_bar=bar;
+			two_bar.insert(two_bar.end(),bar2.begin(),bar2.end());
+			
+			clause_creation(two_bar);
+			//if(count%2==0)
+			//	std::cout<<std::endl;
+			count++;	
+		}
+		 bool res = solver->solve();
+	return res;
+}
 
 void rule1(int vertice_number,int vc_size){
 	int index=1;
-	std::cout<<"rule 1 VN:"<<vertice_number<<std::endl;
-	std::cout<<"rule 1 VCS:"<<vc_size<<std::endl;
+	//std::cout<<"rule 1 VN:"<<vertice_number<<std::endl;
+	//std::cout<<"rule 1 VCS:"<<vc_size<<std::endl;
 	//std::list<std::vector<int>> ckln;
 	
 	
@@ -169,7 +237,7 @@ void rule1(int vertice_number,int vc_size){
     			obj1.position = index;
 			obj1.index_i=i;
 			obj1.index_k=j;			
-			line.push_back(obj1);
+			props.push_back(obj1);
 			index++;
 			Minisat::Lit l=Minisat::mkLit(solver->newVar());
 			vars.push(l);
@@ -190,8 +258,8 @@ void rule1(int vertice_number,int vc_size){
 	for(int i=1;i<=vc_size;i++)
 	{
 	
- 	for (std::vector<Proposition>::iterator it = line.begin() ;
-        	it != line.end(); ++it) {
+ 	for (std::vector<Proposition>::iterator it = props.begin() ;
+        	it != props.end(); ++it) {
 		if(i==(*it).index_k)
     		{
 			
@@ -225,11 +293,11 @@ void rule1(int vertice_number,int vc_size){
 void rule2(int vertice_number,int vc_size){
 	
 	//int index=1;
-	std::cout<<"rule 2 VN:"<<vertice_number<<std::endl;
-	std::cout<<"rule 2 VCS:"<<vc_size<<std::endl;
+	//std::cout<<"rule 2 VN:"<<vertice_number<<std::endl;
+	//std::cout<<"rule 2 VCS:"<<vc_size<<std::endl;
 	std::vector<int> bar_rule2;
-	for (std::vector<Proposition>::iterator it = line.begin() ;
-        	it != line.end(); ++it) {
+	for (std::vector<Proposition>::iterator it = props.begin() ;
+        	it != props.end(); ++it) {
 		if(((*it).position)%vc_size==0)
 		{	
 			bar_rule2.push_back((*it).position);
@@ -247,23 +315,24 @@ void rule2(int vertice_number,int vc_size){
 }
 
 
-void rule4(int point){
+std::vector<int> rule4(int point){
 	
 	//int index=1;
 	//std::cout<<"rule 4 point:"<<point<<std::endl;
 
-	
- 	for (std::vector<Proposition>::iterator it = line.begin() ;
-        	it != line.end(); ++it) {
-		if(point==(*it).index_i)
+	std::vector<int> bar;
+	//std::cout<<props.size()<<"I am in methdo"<<std::endl;
+ 	for (std::vector<Proposition>::iterator iter = props.begin() ;
+        	iter != props.end(); ++iter) {
+		if(point==(*iter).index_i)
     		{
-			std::cout<<(*it).position;
-			
+			bar.push_back((*iter).position);
+			//std::cout<<(*iter).position<<"I am in methdo"<<std::endl;
 			
 		}      
     	}
 	
-	
+	return bar;
 	
 }
 
@@ -272,7 +341,8 @@ void rule4(int point){
 //n is the size of vector
 //r is the number being chosen to permute
 void permutation(std::vector<int> bar){
-	
+	if(bar.size()>1)
+		{
  	int r=2;
 	int n=bar.size();
 	//std::cout<<n<<" n value"<<std::endl;
@@ -287,19 +357,34 @@ void permutation(std::vector<int> bar){
                std::cout << bar.at(i) << " ";
            }
        }
-	clause_creation(permu_vector);
+	clause_creation_reverse(permu_vector);
        std::cout << "\n";
    } while (std::prev_permutation(v.begin(), v.end()));
-
+}
 }
 
 
 
 void clause_creation(std::vector<int> bar){
+	
+	std::cout<<std::endl;
 	Minisat::vec<Minisat::Lit> clause;
 	for (int i = 0; i < bar.size(); ++i) {
            
         	  clause.push(vars[bar.at(i)-1]);
+           
+       }
+	
+	solver->addClause(clause);
+}
+
+void clause_creation_reverse(std::vector<int> bar){
+	
+	std::cout<<std::endl;
+	Minisat::vec<Minisat::Lit> clause;
+	for (int i = 0; i < bar.size(); ++i) {
+           
+        	  clause.push(~vars[bar.at(i)-1]);
            
        }
 	

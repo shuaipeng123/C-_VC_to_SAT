@@ -87,13 +87,13 @@ int main(void) {
 
     // read the values from the initial lit
     std::cout << "satisfying assignment is: "
-              << "l1=" << Minisat::toInt(solver->modelValue(l1)) << " "
-              << "l2=" << Minisat::toInt(solver->modelValue(l2)) << " "
-              << "l3=" << Minisat::toInt(solver->modelValue(l3)) << " "
-              << "l4=" << Minisat::toInt(solver->modelValue(l4)) << " "
-              << "b0=" << Minisat::toInt(solver->modelValue(b0)) << " "
-              << "b1=" << Minisat::toInt(solver->modelValue(b0)) << " "
-              << "b2=" << Minisat::toInt(solver->modelValue(b0)) << std::endl;
+              << "l1=" << Minisat::toInt(solver->modelValue(vars[0])) << " "
+              << "l2=" << Minisat::toInt(solver->modelValue(vars[1])) << " "
+              << "l3=" << Minisat::toInt(solver->modelValue(vars[2])) << " "
+              << "l4=" << Minisat::toInt(solver->modelValue(vars[3])) << " "
+              << "b0=" << Minisat::toInt(solver->modelValue(vars[4])) << " "
+              << "b1=" << Minisat::toInt(solver->modelValue(vars[5])) << " "
+              << "b2=" << Minisat::toInt(solver->modelValue(vars[6])) << std::endl;
 
     // more clauses can be added to the solver
     /*std::cout << "Adding more clauses...\n";
@@ -109,7 +109,23 @@ int main(void) {
     // the next line de-allocates existing solver and allocates a new
     // one in its place.
     solver.reset (new Minisat::Solver());
+    vars.clear();
+ 	
+    // create 4 positive literals over 4 new variables
+ vars.push(l1);
+    vars.push(l2);
+    vars.push(l3);
+    vars.push(l4);
 
+ 	std::cout << vars.size()<<"Adding more clauses...\n";
+ Minisat::vec<Minisat::Lit> constr1;
+	    constr1.push(vars[0]);
+ solver->addClause(constr1);
+
+
+    // check whether the CNF in the solver is still satisfiable
+    res = solver->solve();
+    std::cout << "New result is: " << res << "\n";
     // at this point the solver is ready. You must create new
     // variable and new clauses
     return 0;

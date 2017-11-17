@@ -18,5 +18,8 @@ set (CMAKE_CXX_FLAGS "-std=c++11 -Wall ${CMAKE_CXX_FLAGS}")
 include_directories(${CMAKE_SOURCE_DIR}/minisat)
 ## add additional .cpp files if needed
 add_executable(ece650-a2 ece650-a2.cpp)
+add_executable(binaryS binaryS.cpp)
+add_executable(test_sat test_sat.cpp)
 # link minisat library with the main executable
 target_link_libraries(ece650-a2 minisat-lib-static)
+target_link_libraries(test_sat minisat-lib-static)

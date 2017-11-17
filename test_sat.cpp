@@ -109,7 +109,23 @@ int main(void) {
     // the next line de-allocates existing solver and allocates a new
     // one in its place.
     solver.reset (new Minisat::Solver());
+    vars.clear();
+ 	
+    // create 4 positive literals over 4 new variables
+ vars.push(l1);
+    vars.push(l2);
+    vars.push(l3);
+    vars.push(l4);
 
+ 	std::cout << vars.size()<<"Adding more clauses...\n";
+ Minisat::vec<Minisat::Lit> constr;
+	    constr1.push(vars[0]);
+ solver->addClause(constr);
+
+
+    // check whether the CNF in the solver is still satisfiable
+    res = solver->solve();
+    std::cout << "New result is: " << res << "\n";
     // at this point the solver is ready. You must create new
     // variable and new clauses
     return 0;
