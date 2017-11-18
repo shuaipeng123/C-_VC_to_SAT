@@ -72,7 +72,7 @@ int main(int argc, char **argv) {
       if (std::cin.eof()) {
         std::cerr  << "EOF\n";
       } else {
-        std::cerr << "Error:in shortest path no input\n";
+        std::cerr << "Error:in vertice cover no input\n";
       }
     } else {
 	
@@ -81,7 +81,7 @@ int main(int argc, char **argv) {
       ws(input);
 
       if (input.fail()) {
-        std::cerr << "Error:in shortest path  need to parse a character\n";
+        std::cerr << "Error:in vertice cover   need to parse a character\n";
       }
 
       if (ch == 'V' && flag_v) {
@@ -92,7 +92,7 @@ int main(int argc, char **argv) {
         input >> num;
 
         if (input.fail()) {
-          std::cerr << "Error:in shortest path  need to parse a number\n";
+          std::cerr << "Error:in vertice cover   need to parse a number\n";
           break;
         } else {
           vertice_number = num;
@@ -120,7 +120,7 @@ int main(int argc, char **argv) {
 	 
           if (!flag_point) {
             points1.clear();
-            std::cerr << "Error: in shortest path  wrong input for E\n";
+            std::cerr << "Error: in vertex cover  wrong input for E\n";
           } else
 		{
 		/**
@@ -154,7 +154,7 @@ int main(int argc, char **argv) {
 		int tmp_high=vertice_number;
 		int low=1;
 		int mid=0;
-		while(low<tmp_high){
+		while(low<=tmp_high){
 			mid = (low + tmp_high )/2;
 			if(reduction_solver(mid))
 			{
@@ -163,14 +163,12 @@ int main(int argc, char **argv) {
 			else{
 				low=mid+1;
 			}
-			solver.reset (new Minisat::Solver());
-			 props.clear();
-			  vars.clear();
-			std::cout<<mid<<"this is mid"<<std::endl;
+			
+			//std::cout<<mid<<"this is mid"<<std::endl;
 		}
 		bool res=reduction_solver(low);
-   		std::cout << "The result is: " << res << "\n";
-		std::cout << "satisfying assignment is: ";
+   		//std::cout << "The result is: " << res << "\n";
+		//std::cout << "satisfying assignment is: ";
 		if(res){
 		for(int s=0;s<vars.size();s++)
 		{
@@ -186,13 +184,15 @@ int main(int argc, char **argv) {
         }
 
       } else
-        std::cerr << "Error:in shortest path  wrong input\n"<<std::flush;
+        std::cerr << "Error:in vertice cover  wrong input\n"<<std::flush;
     }
   }
 }
 
 bool reduction_solver(int k_value){
-	
+			solver.reset (new Minisat::Solver());
+			 props.clear();
+			  vars.clear();
 		rule1(vertice_number,k_value);
 	  	rule2(vertice_number,k_value);
 		int count=1;
@@ -260,7 +260,7 @@ void rule1(int vertice_number,int vc_size){
 		if(i==(*it).index_k)
     		{
 			
-			std::cout<<(*it).position;
+			//std::cout<<(*it).position;
 			
 			bar_rule3.push_back((*it).position);
 			
@@ -351,11 +351,11 @@ void permutation(std::vector<int> bar){
        for (int i = 0; i < n; ++i) {
            if (v[i]) {
 		permu_vector.push_back(bar.at(i));
-               std::cout << bar.at(i) << " ";
+               //std::cout << bar.at(i) << " ";
            }
        }
 	clause_creation_reverse(permu_vector);
-       std::cout << "\n";
+      // std::cout << "\n";
    } while (std::prev_permutation(v.begin(), v.end()));
 }
 }
@@ -364,9 +364,9 @@ void permutation(std::vector<int> bar){
 
 void clause_creation(std::vector<int> bar){
 	
-	std::cout<<std::endl;
+	//std::cout<<std::endl;
 	Minisat::vec<Minisat::Lit> clause;
-	for (int i = 0; i < bar.size(); ++i) {
+	for (auto i = 0; i < bar.size(); ++i) {
            
         	  clause.push(vars[bar.at(i)-1]);
            
@@ -377,9 +377,9 @@ void clause_creation(std::vector<int> bar){
 
 void clause_creation_reverse(std::vector<int> bar){
 	
-	std::cout<<std::endl;
+	//std::cout<<std::endl;
 	Minisat::vec<Minisat::Lit> clause;
-	for (int i = 0; i < bar.size(); ++i) {
+	for (auto i = 0; i < bar.size(); ++i) {
            
         	  clause.push(~vars[bar.at(i)-1]);
            
